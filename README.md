@@ -5,6 +5,9 @@ You will find here one of the sub projects of Vitam (Valuable Items Transfered t
 
 The global license is GPL V3.
 
-The Vitam project is hold by several french entities, among them the French National Archives and the French Diplomatic Archives.
+The Vitam project is hold by several french entities, among them the French National Archives, the French Diplomatic Archives and the French Defense Archives.
 
 Those applications are by no mean a definitive product but a prototype to try and test different options in the preliminary steps of the Vitam Project.
+
+
+This Project is about a prototype for email extraction from PST/Mailbox to EML, extracting attached document and metadata.
