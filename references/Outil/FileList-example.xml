@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FileList>
+	<FileListId>identifiant</FileListId>
+	<CodeVersions>
+		<IntegrityAlgorithmCodeVersion>
+			<Id>identifiant</Id>
+			<Name>nom</Name>
+			<OwnerName>nom</OwnerName>
+			<VersionId>identifiant</VersionId>
+			<Uri>http://uri</Uri>
+			<SchemaUri>http://uri</SchemaUri>
+		</IntegrityAlgorithmCodeVersion>
+	</CodeVersions>
+	<List>
+		<File>
+			<Id>identifiant</Id>
+			<FileUri>http://uri</FileUri>
+			<Size>123456</Size>
+			<Digest algorithm="identifiant">ABCDEF0123456789</Digest>
+		</File>
+		<File>
+			<Id>identifiant</Id>
+			<FileUri>http://uri</FileUri>
+			<Size>123456</Size>
+			<Digest algorithm="identifiant">ABCDEF0123456789</Digest>
+		</File>
+		<File>
+			<Id>identifiant</Id>
+			<FileUri>http://uri</FileUri>
+			<Size>123456</Size>
+			<Digest algorithm="identifiant">ABCDEF0123456789</Digest>
+		</File>
+	</List>
+</FileList>

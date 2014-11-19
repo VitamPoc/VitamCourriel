@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.8.2
+Created-By: 1.7.0_25-b15 (Oracle Corporation)
+Built-By: gmcgath
+Built-On: 2013-09-29T20:01:03
+Main-Class: JhoveView
+
+Name: JHOVE
+Version: 1.0
+Package: Swing Viewer
+Rights: Copyright 2004-2006 by JSTOR and the President and Fellows of 
+ Harvard College
+

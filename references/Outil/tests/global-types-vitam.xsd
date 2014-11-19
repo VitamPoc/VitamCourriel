@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+    <xsd:simpleType name="NonEmptyTokenType">
+        <xsd:annotation>
+            <xsd:documentation>Token not empty</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:token">
+            <xsd:minLength value="1" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="UnknownType">
+        <xsd:union memberTypes="xsd:anySimpleType" />
+    </xsd:simpleType>
+    <xsd:simpleType name="IdType">
+        <xsd:annotation>
+            <xsd:documentation>ID used for DataObject items</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:ID" />
+    </xsd:simpleType>
+    <xsd:simpleType name="SizeInBytesType">
+        <xsd:annotation>
+            <xsd:documentation>Size of binary Data object in bytes</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:positiveInteger" />
+    </xsd:simpleType>
+    <xsd:simpleType name="BinaryType">
+        <xsd:annotation>
+            <xsd:documentation>Binary represenation: could be base64 or hexadecimal
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:union memberTypes="xsd:base64Binary xsd:hexBinary" />
+    </xsd:simpleType>
+    <!-- Empreinte -->
+    <xsd:complexType name="DigestType">
+        <xsd:annotation>
+            <xsd:documentation>A digest is made of a hash value in binary format according to an algorithm
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="value" type="BinaryType" />
+            <xsd:element name="algorithm" type="NonEmptyTokenType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="ByteOrderType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="LITTLE_ENDIAN" />
+            <xsd:enumeration value="BIG_ENDIAN" />
+            <xsd:enumeration value="MIDDLE_ENDIAN" />
+        </xsd:restriction>
+    </xsd:simpleType>
+    <!-- CodeList: listID identifiant unique, tandis que name, versionID et schemaURI permettent de trouver la definition detaillee de la liste -->
+    <xsd:complexType name="CodeListType">
+        <xsd:annotation>
+            <xsd:documentation>listID as unique ID for a list of values, other elements to detail if needed the content of this list or the version
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="listID" type="NonEmptyTokenType" />
+            <xsd:element name="listName" type="NonEmptyTokenType" minOccurs="0" />
+            <xsd:element name="listVersionID" type="NonEmptyTokenType" minOccurs="0" />
+            <xsd:element name="listSchemaURI" type="xsd:anyURI" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="MinimalDataObjectType">
+        <xsd:annotation>
+            <xsd:documentation>Minimal Data object: one ID used everywhere else</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="id" type="IdType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- Objet de donnees binaire -->
+    <xsd:complexType name="BinaryDataObjectType">
+        <xsd:annotation>
+            <xsd:documentation>Binary data object: one uri, one digest, one size</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="MinimalDataObjectType">
+                <xsd:sequence>
+                    <xsd:element name="uri" type="xsd:anyURI" />
+                    <xsd:element name="digest" type="DigestType" />
+                    <xsd:element name="size" type="SizeInBytesType" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <!-- Objet de donnees physique -->
+    <xsd:complexType name="PhysicalDataObjectType">
+        <xsd:annotation>
+            <xsd:documentation>Physical data object: one physical ID</xsd:documentation>
+        </xsd:annotation>
+        <xsd:complexContent>
+            <xsd:extension base="MinimalDataObjectType">
+                <xsd:sequence>
+                    <xsd:element name="physicalID" type="NonEmptyTokenType" />
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    <!-- Code retour et commentaire associe -->
+    <xsd:group name="ReplyCodeGroup">
+        <xsd:annotation>
+            <xsd:documentation>A reply code, from the list of reply code, and a description of the reason of this reply code, potentially with
+                multiple entries
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="replyCode" type="NonEmptyTokenType" />
+            <xsd:element name="replyDescription" type="xsd:string" minOccurs="0" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:group>
+    <!-- Paquet d'objets de donnees -->
+    <xsd:complexType name="DataObjectPackageType">
+        <xsd:annotation>
+            <xsd:documentation>A list of Data objects</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element name="binaryDataObject" type="BinaryDataObjectType" />
+                <xsd:element name="physicalDataObject" type="PhysicalDataObjectType" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- Paquet d'objets de donnees rejetes -->
+    <xsd:complexType name="RejectedDataObjectPackageType">
+        <xsd:annotation>
+            <xsd:documentation>A list of rejected Data objects and their related Reply code
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element name="binaryDataObject">
+                    <xsd:complexType>
+                        <xsd:complexContent>
+                            <xsd:extension base="BinaryDataObjectType">
+                                <xsd:sequence>
+                                    <xsd:group ref="ReplyCodeGroup" />
+                                </xsd:sequence>
+                            </xsd:extension>
+                        </xsd:complexContent>
+                    </xsd:complexType>
+                </xsd:element>
+                <xsd:element name="physicalDataObject">
+                    <xsd:complexType>
+                        <xsd:complexContent>
+                            <xsd:extension base="PhysicalDataObjectType">
+                                <xsd:sequence>
+                                    <xsd:group ref="ReplyCodeGroup" />
+                                </xsd:sequence>
+                            </xsd:extension>
+                        </xsd:complexContent>
+                    </xsd:complexType>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- *****************************
+         ****** Objets a specifier ***
+         ***************************** -->
+    <!-- Signature -->
+    <xsd:complexType name="SignatureType">
+        <xsd:annotation>
+            <xsd:documentation>A signature, if necessary, with message</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

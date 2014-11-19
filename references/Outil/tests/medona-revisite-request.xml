@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ArchiveTransfer xmlns="fr.gouv.vitam:v1.0" xmlns:x0="http://www.w3.org/2001/XMLSchema">
+    <Date>2002-05-30T09:30:10</Date>
+    <MessageIdentifier>query-xx-012</MessageIdentifier>
+    <Signature/>
+    <CodeLists>
+        <DigestAlgorithmCodeListVersion>
+            <ListID>DigestListVitam-01.0</ListID>
+            <ListName>Liste Vitam des algorithmes d'empreintes supportés</ListName>
+            <ListVersionID>1.0</ListVersionID>
+            <ListSchemaURI>http://vitam.modernisation.gouv.fr/referentiel/DigestListVitam-1.0.xml</ListSchemaURI>
+        </DigestAlgorithmCodeListVersion>
+        <ReplyCodeListVersion>
+            <ListID>ReplyCodeListVitam-01.1</ListID>
+            <ListName>Liste Vitam des codes retours supportés (pour
+                le client)</ListName>
+            <ListVersionID>1.1</ListVersionID>
+            <ListSchemaURI>http://vitam.modernisation.gouv.fr/referentiel/ReplyCodeListVitam-1.1.xml</ListSchemaURI>
+        </ReplyCodeListVersion>
+    </CodeLists>
+    <DataObjectPackage>
+        <BinaryDataObject>
+            <Uri>/folder/on-xx-01.doc</Uri>
+            <Digest>
+                <Value>ABCDEF0123456789</Value>
+                <Algorithm>sha-512</Algorithm>
+            </Digest>
+            <Size>123456789</Size>
+            <Id>on-xx-01</Id>
+        </BinaryDataObject>
+        <BinaryDataObject>
+            <Uri>/folder/on-xx-02.xls</Uri>
+            <Digest>
+                <Value>ABCDEF0123456789</Value>
+                <Algorithm>sha-512</Algorithm>
+            </Digest>
+            <Size>12345678</Size>
+            <Id>on-xx-02</Id>
+        </BinaryDataObject>
+        <PhysicalDataObject>
+            <PhysicalID>physicalId-01</PhysicalID>
+            <Id>on-xx-03</Id>
+        </PhysicalDataObject>
+    </DataObjectPackage>
+    <ManagementMetadata>
+        <ArchivalAgreement>contract-012345</ArchivalAgreement>
+    </ManagementMetadata>
+    <TransferRequestReplyIdentifier>query-xx-011</TransferRequestReplyIdentifier>
+    <ArchivalAgency>
+        <Identifier>sae-0123</Identifier>
+        <OrganizationDescriptiveMetadata>Description du SAE</OrganizationDescriptiveMetadata>
+    </ArchivalAgency>
+    <TransferringAgency>
+        <Identifier>partner-0124</Identifier>
+        <OrganizationDescriptiveMetadata>Description du service versant</OrganizationDescriptiveMetadata>
+    </TransferringAgency>
+    <DescriptiveMetadata>
+        <DescriptiveMetadata>
+            <Uri>/descr/desc-xx-01.xml</Uri>
+            <Digest>
+                <Value>ABCDEF0123456789</Value>
+                <Algorithm>sha-512</Algorithm>
+            </Digest>
+            <Size>12345</Size>
+            <Id>desc-xx-01</Id>
+        </DescriptiveMetadata>
+    </DescriptiveMetadata>
+    <TechnicalMetadata>
+        <TechnicalMetadata>
+            <Uri>/techn/tech-xx-01.xml</Uri>
+            <Digest>
+                <Value>ABCDEF0123456789</Value>
+                <Algorithm>sha-512</Algorithm>
+            </Digest>
+            <Size>1234</Size>
+            <Id>tech-xx-01</Id>
+        </TechnicalMetadata>
+    </TechnicalMetadata>
+</ArchiveTransfer>

@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema
+        targetNamespace="fr.gouv.vitam:v1.0"
+        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+        xmlns="fr.gouv.vitam:v1.0"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        version="1.0">
+
+    <!--
+                *****************************
+                ***   Types de base
+                *****************************
+        -->
+    <xsd:simpleType name="nonEmptyToken">
+        <xsd:restriction base="xsd:token">
+            <xsd:minLength value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <!-- CodeList: listID identifiant unique, tandis que name, versionID et schemaURI permettent de trouver la definition detaillee de la liste -->
+    <xsd:complexType name="CodeListType">
+        <xsd:sequence>
+            <xsd:element name="ListID" type="nonEmptyToken"/>
+            <xsd:element name="ListName" type="nonEmptyToken" minOccurs="0"/>
+            <xsd:element name="ListVersionID" type="nonEmptyToken" minOccurs="0"/>
+            <xsd:element name="ListSchemaURI" type="xsd:anyURI" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Paquet d'objets de donnees -->
+    <xsd:complexType name="DataObjectPackageType">
+        <xsd:sequence>
+            <xsd:choice maxOccurs="unbounded">
+                <xsd:element name="BinaryDataObject" type="BinaryDataObjectType"/>
+                <xsd:element name="PhysicalDataObject" type="PhysicalDataObjectType"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Objet de donnees binaire -->
+    <xsd:complexType name="BinaryDataObjectType">
+        <xsd:sequence>
+            <xsd:element name="Uri" type="xsd:anyURI"/>
+            <xsd:element name="MessageDigest" type="MessageDigestBinaryObjectType"/>
+            <xsd:element name="Size" type="SizeInBytesType"/>
+            <xsd:element name="Id" type="xsd:ID"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Objet de donnees physique -->
+    <xsd:complexType name="PhysicalDataObjectType">
+        <xsd:sequence>
+            <xsd:element name="PhysicalID" type="nonEmptyToken"/>
+            <xsd:element name="Id" type="xsd:ID"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Taille d'un Objet de donnees binaire exprime en octets -->
+    <xsd:simpleType name="SizeInBytesType">
+        <xsd:restriction base="xsd:positiveInteger"/>
+    </xsd:simpleType>
+     
+    <!-- Contenu de donnees binaire -->
+    <xsd:simpleType name="BinaryObjectType">
+        <xsd:union memberTypes="xsd:base64Binary xsd:hexBinary"/>
+    </xsd:simpleType>
+    
+    <!-- Empreinte -->
+    <xsd:complexType name="MessageDigestBinaryObjectType">
+        <xsd:sequence>
+            <xsd:element name="Value" type="BinaryObjectType"/>
+            <xsd:element name="Algorithm" type="nonEmptyToken"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Liste des versions des referentiels utilises -->
+    <xsd:complexType name="CodeListsType">
+        <xsd:sequence>
+            <xsd:element name="MessageDigestAlgorithmCodeListVersion" type="CodeListType"/>
+            <xsd:element name="ReplyCodeListVersion" type="CodeListType"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Metadonnees de gestion -->
+    <xsd:complexType name="ManagementMetadataType">
+        <xsd:sequence>
+            <xsd:element name="ArchivalAgreement" type="nonEmptyToken"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Organisation -->
+    <xsd:complexType name="OrganizationType">
+        <xsd:sequence>
+            <xsd:element name="Identifier" type="nonEmptyToken"/>
+            <xsd:element name="OrganizationDescriptiveMetadata" type="xsd:string" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Metadonnees descriptives pour un paquet d'Objets de donnees => stockes dans un fichier a part -->
+    <xsd:complexType name="DescriptiveMetadataType">
+        <xsd:sequence>
+            <xsd:element name="DescriptiveMetadata" type="BinaryDataObjectType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- Metadonnees techniques pour un paquet d'Objets de donnees => stockes dans un fichier a part -->
+    <xsd:complexType name="TechnicalMetadataType">
+        <xsd:sequence>
+            <xsd:element name="TechnicalMetadata" type="BinaryDataObjectType" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!--
+                *****************************
+                ***   Objets a specifier
+                ***************************** 
+        --> 
+    
+    
+    <!-- Signature -->
+    <xsd:complexType name="SignatureType">
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="lax" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!--
+                *****************************
+                ***   Declaration des types de message
+                *****************************
+        -->
+    
+    <!-- Message -->
+    <xsd:complexType name="MessageType">
+        <xsd:sequence>
+            <xsd:element name="Date" type="xsd:dateTime"/>
+            <xsd:element name="MessageIdentifier" type="nonEmptyToken"/>
+            <xsd:element name="Signature" type="SignatureType" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>        
+     
+    <!-- Message metier -->
+    <xsd:complexType name="BusinessMessageType">
+        <xsd:complexContent>
+            <xsd:extension base="MessageType">
+                <xsd:sequence>
+                    <xsd:element name="CodeLists" type="CodeListsType"/>
+                    <xsd:element name="DataObjectPackage" type="DataObjectPackageType" minOccurs="0"/>
+                    <xsd:element name="ManagementMetadata" type="ManagementMetadataType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- Message de demande -->
+    <xsd:complexType name="BusinessRequestMessageType">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessMessageType"/>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- Message de reponse a une demande -->
+    <xsd:complexType name="BusinessReplyMessageType">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessMessageType">
+                <xsd:sequence>
+                    <xsd:element name="ReplyCode" type="nonEmptyToken"/>
+                    <xsd:element name="MessageRequestIdentifier" type="nonEmptyToken"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    
+     <!--
+                *****************************
+                ***   Le message d'accuse de reception
+                *****************************
+        -->
+    <xsd:complexType name="AcknowledgementType" >
+        <xsd:complexContent>
+            <xsd:extension base="MessageType">
+                <xsd:sequence>
+                    <xsd:element name="MessageReceivedIdentifier" type="nonEmptyToken"/>
+                    <xsd:element name="Sender" type="OrganizationType"/>
+                    <xsd:element name="Receiver" type="OrganizationType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!--
+                *****************************
+                ***   Les messages de requete
+                *****************************
+        -->
+    <!-- Message de transfert (attention le paquet de donnees est facultatif)-->
+    <xsd:complexType name="ArchiveTransferType" >
+        <xsd:complexContent>
+            <xsd:extension base="BusinessRequestMessageType">
+                <xsd:sequence>
+                    <xsd:element name="TransferRequestReplyIdentifier" type="nonEmptyToken" minOccurs="0"/>
+                    <xsd:element name="ArchivalAgency" type="OrganizationType"/>
+                    <xsd:element name="TransferringAgency" type="OrganizationType"/>
+                    <xsd:element name="DescriptiveMetadata" type="DescriptiveMetadataType"/>
+                    <xsd:element name="TechnicalMetadata" type="TechnicalMetadataType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- Message de demande de transfert -->
+    <xsd:complexType name="ArchiveTransferRequestType">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessRequestMessageType">
+                <xsd:sequence>
+                    <xsd:element name="TransferDate" type="xsd:dateTime" minOccurs="0"/>
+                    <xsd:element name="ArchivalAgency" type="OrganizationType"/>
+                    <xsd:element name="TransferringAgency" type="OrganizationType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+        
+    <!--
+                *****************************
+                ***   Les messages de reponse a une requete
+                *****************************
+        -->
+    <!-- Message de reponse a un transfert -->
+    <xsd:complexType name="ArchiveTransferReplyType" >
+        <xsd:complexContent>
+            <xsd:extension base="BusinessReplyMessageType">
+                <xsd:sequence>
+                    <xsd:element name="GrantDate" type="xsd:dateTime" minOccurs="0"/>
+                    <xsd:element name="ArchivalAgency" type="OrganizationType"/>
+                    <xsd:element name="TransferringAgency" type="OrganizationType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+    
+    <!-- Message de reponse a une demande de transfert -->
+    <xsd:complexType name="ArchiveTransferRequestReplyType">
+        <xsd:complexContent>
+            <xsd:extension base="BusinessReplyMessageType">
+                <xsd:sequence>
+                    <xsd:element name="TransferDate" type="xsd:dateTime" minOccurs="0"/> 
+                    <xsd:element name="ArchivalAgency" type="OrganizationType"/> 
+                    <xsd:element name="TransferringAgency" type="OrganizationType"/>
+                </xsd:sequence>
+            </xsd:extension>
+        </xsd:complexContent>
+    </xsd:complexType>
+
+    <!-- Racines des messages possibles -->
+    <xsd:element name="Acknowledgement" type="AcknowledgementType"/>
+    <xsd:element name="ArchiveTransfer" type="ArchiveTransferType"/>
+    <xsd:element name="ArchiveTransferReply" type="ArchiveTransferReplyType"/>
+    <xsd:element name="ArchiveTransferRequest" type="ArchiveTransferRequestType"/>
+    <xsd:element name="ArchiveTransferRequestReply" type="ArchiveTransferRequestReplyType"/>
+</xsd:schema>
+ 

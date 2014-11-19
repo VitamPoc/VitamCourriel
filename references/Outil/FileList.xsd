@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="fr:gouv:vitam:FileList" targetNamespace="fr:gouv:vitam:FileList"
+	xmlns:xlink="http://www.w3.org/1999/xlink" elementFormDefault="qualified"
+	version="1.0">
+	<xsd:import namespace="http://www.w3.org/XML/1998/namespace"
+		schemaLocation="xml.xsd" />
+	<xsd:import namespace="http://www.w3.org/1999/xlink"
+		schemaLocation="xlink.xsd" />
+	<!-- Code -->
+	<xsd:complexType name="CodeType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:token">
+				<xsd:attribute name="ID" type="xsd:ID" use="optional" />
+				<xsd:attribute name="Name" type="xsd:string" use="optional" />
+				<xsd:attribute name="OwnerName" type="xsd:string" use="optional" />
+				<xsd:attribute name="VersionID" type="xsd:token" use="optional" />
+				<xsd:attribute name="URI" type="xsd:anyURI" use="optional" />
+				<xsd:attribute name="SchemaURI" type="xsd:anyURI" use="optional" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- Liste des versions des référentiels utilisés -->
+	<xsd:complexType name="CodeVersionsType">
+		<xsd:sequence>
+			<xsd:element name="IntegrityAlgorithmCodeVersion" type="CodeType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- Contenu de données binaire -->
+	<xsd:complexType name="BinaryObjectType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:hexBinary" />
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- Empreinte -->
+	<xsd:complexType name="HashcodeBinaryObjectType">
+		<xsd:simpleContent>
+			<xsd:extension base="BinaryObjectType">
+				<xsd:attribute name="algorithm" type="xsd:token" use="required" />
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+	<!-- Taille d'un Objet de données binaire exprimé en octets -->
+	<xsd:simpleType name="ByteSizeType">
+		<xsd:restriction base="xsd:nonNegativeInteger" />
+	</xsd:simpleType>
+	<!-- Définition d'un fichier dans une liste -->
+	<xsd:complexType name="FileType">
+		<xsd:sequence>
+			<xsd:element name="Id" type="xsd:ID" />
+			<xsd:element name="FileUri" type="xsd:anyURI" />
+			<xsd:element name="Size" type="ByteSizeType" />
+			<xsd:element name="Digest" type="HashcodeBinaryObjectType" />
+		</xsd:sequence>
+	</xsd:complexType>
+	<!-- Liste des fichiers -->
+	<xsd:complexType name="FileListType">
+		<xsd:sequence>
+			<xsd:element name="FileListId" type="xsd:ID" />
+			<xsd:element name="CodeListVersions" type="CodeVersionsType" />
+			<xsd:element name="List">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="File" type="FileType" minOccurs="1"
+							maxOccurs="unbounded" />
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:element name="FileList" type="FileListType" />
+</xsd:schema>

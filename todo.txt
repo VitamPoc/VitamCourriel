@@ -1,0 +1,13 @@
+
+getting mime
+wget -m ftp://ftp.iana.org/assignments/media-types/
+cd ftp.iana.org/assignments/media-types
+foreach typ (`find * -type d -print`)
+   links -dump $typ/index.html | \
+      perl -p -e "s|^\s+|$typ/|;" >> mtypes.txt
+end
+# manually edit mtypes.txt to remove the garbage lines
+foreach typ (`cut -d ' ' mtypes.txt`)
+   grep -q -i -F "$typ" mime.types || echo $typ
+end
+

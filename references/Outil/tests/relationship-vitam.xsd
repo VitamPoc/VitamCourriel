@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:dc="http://purl.org/dc/elements/1.1/" elementFormDefault="qualified">
+    <xsd:import namespace="http://purl.org/dc/elements/1.1/" schemaLocation="simpledc20021212.xsd" />
+    <xsd:complexType name="relationType">
+        <xsd:annotation>
+            <xsd:documentation>Recommended best practice is to reference the resource by means of a string or number conforming to a formal
+                identification system. Relation is used to show the relation in content to another resource. For example, "IsPartOf" is used to show
+                the relation between a part of a radio programme and the whole programme, or between a track and a record album. A resource can be
+                identified by its title, or preferably by an identifier. Relation is used to provide a name, locator, accession, identification number
+                or ID where the related item can be obtained or found.
+            </xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice>
+            <xsd:element ref="dc:relation">
+                <xsd:annotation>
+                    <xsd:documentation> The EBU core metadata set is built as a refinement of the Dublin Core. A title would be given using this
+                        element.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="relationIdentifier" type="identifierType">
+                <xsd:annotation>
+                    <xsd:documentation> An identifier would be given using this element.
+                    </xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="relationLink" type="xsd:anyURI">
+                <xsd:annotation>
+                    <xsd:documentation> A link to related material.</xsd:documentation>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+        <xsd:attributeGroup ref="typeGroup">
+            <xsd:annotation>
+                <xsd:documentation>To show the type of relation to another resource, e.g. identifies ways in which the resource is related by
+                    intellectual content to some other resource.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attributeGroup>
+        <xsd:attribute name="runningOrderNumber" type="xsd:integer">
+            <xsd:annotation>
+                <xsd:documentation> If exists, it provides the ranking/running order within an ordered list.
+                </xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="note" type="xsd:string">
+            <xsd:annotation>
+                <xsd:documentation> Optional additional contextual information.</xsd:documentation>
+            </xsd:annotation>
+        </xsd:attribute>
+    </xsd:complexType>
+    <xsd:element name="relation" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> Recommended best practice is to reference the resource (to which the current resource under description is related) by
+                means of a string or number conforming to a formal identification system. Relation is used to show the relation in content to another
+                resource. For example, "IsPartOf" is used to show the relation between a part of a radio programme and the whole programme or between
+                a track and a record album. A resource can be identified by its title, or an identifier (possibly a URI). The related item has its own
+                separate metadata record. Relation is used to provide a name, an identification number or ID, or a locator where the related item can
+                be found.
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isVersionOf" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to the resource that the current resource is a version of
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="hasVersion" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to another version of the resource</xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isReplacedBy" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource replacing the current resource
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="replaces" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that the current resource replaces
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isRequiredBy" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource requiring the current resource
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="requires" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that the current resource requires
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isPartOf" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that the current resource is a part of
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="hasPart" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that forms part of the current resource
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isReferencedBy" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that references the current resource
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="references" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource that the current resource references
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isFormatOf" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a resource with which the current resource shares a format
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="hasFormat" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A format in which the resource is also available
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isEpisodeOf" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a series the current resource is an episode of
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="isMemberOf" type="relationType" minOccurs="0" maxOccurs="unbounded">
+        <xsd:annotation>
+            <xsd:documentation> A reference to a group the current resource is an member of
+            </xsd:documentation>
+        </xsd:annotation>
+    </xsd:element>
+</xsd:schema>
